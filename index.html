@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moonlight Bakery & Café ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-deep: #050a1a;
+    --sky-mid: #0b1535;
+    --sky-blue: #0f1e4a;
+    --moon-glow: #f5e6c8;
+    --moon-soft: #fff8e7;
+    --warm-amber: #e8974a;
+    --warm-gold: #d4a843;
+    --warm-cream: #f9edd8;
+    --warm-peach: #f2c98a;
+    --accent-teal: #4ecdc4;
+    --glass-bg: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --card-bg: rgba(15,25,65,0.7);
+    --text-primary: #f9edd8;
+    --text-secondary: rgba(249,237,216,0.7);
+    --text-muted: rgba(249,237,216,0.45);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--sky-deep);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ───── STARFIELD ───── */
+  #starfield {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse 120% 80% at 50% 0%, #1a2a6c 0%, #0b1535 40%, #050a1a 100%);
+  }
+
+  .star {
+    position: absolute; border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--d, 3s) ease-in-out infinite var(--del, 0s);
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--min, 0.2); transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  /* Moon */
+  .moon {
+    position: fixed; top: 60px; right: 120px; width: 90px; height: 90px; z-index: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 38%, #fff8e7, #f5e6c8 50%, #d4a843);
+    box-shadow: 0 0 40px 20px rgba(245,230,200,0.25), 0 0 100px 50px rgba(212,168,67,0.12), 0 0 200px 100px rgba(212,168,67,0.06);
+    animation: moonFloat 8s ease-in-out infinite;
+  }
+
+  @keyframes moonFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* Floating particles */
+  .particle {
+    position: fixed; border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,151,74,0.8), transparent);
+    pointer-events: none; z-index: 1;
+    animation: particleDrift var(--dur, 12s) ease-in-out infinite var(--del2, 0s);
+  }
+
+  @keyframes particleDrift {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    20% { opacity: 0.6; }
+    80% { opacity: 0.4; }
+    100% { transform: translate(var(--tx, 40px), var(--ty, -120px)) scale(0.3); opacity: 0; }
+  }
+
+  /* ───── NAVBAR ───── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 0 2rem;
+    backdrop-filter: blur(20px);
+    background: rgba(5, 10, 26, 0.75);
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    transition: all 0.4s ease;
+  }
+
+  .nav-inner {
+    max-width: 1400px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-icon { font-size: 26px; }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700;
+    background: linear-gradient(135deg, #f5e6c8, #e8974a, #f5e6c8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 0.2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    display: block; padding: 0.4rem 0.75rem;
+    text-decoration: none; color: var(--text-secondary);
+    font-size: 0.82rem; font-weight: 400; letter-spacing: 0.03em;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .nav-links a:hover { color: var(--warm-peach); background: rgba(232,151,74,0.1); }
+
+  .nav-actions {
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  .btn-nav {
+    padding: 0.45rem 1rem; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 500; cursor: pointer;
+    text-decoration: none; transition: all 0.25s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-ghost {
+    background: transparent; color: var(--text-secondary);
+    border: 0.5px solid var(--glass-border);
+  }
+
+  .btn-ghost:hover { background: var(--glass-bg); color: var(--warm-peach); }
+
+  .btn-warm {
+    background: linear-gradient(135deg, #e8974a, #d4a843);
+    color: #0b1535; border: none;
+    box-shadow: 0 4px 20px rgba(232,151,74,0.3);
+  }
+
+  .btn-warm:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(232,151,74,0.45); }
+
+  .cart-btn {
+    position: relative; background: var(--glass-bg); border: 0.5px solid var(--glass-border);
+    color: var(--text-primary); padding: 0.45rem 0.7rem; border-radius: 8px;
+    cursor: pointer; font-size: 1rem;
+    transition: all 0.25s ease;
+  }
+
+  .cart-btn:hover { background: rgba(232,151,74,0.15); }
+
+  .cart-count {
+    position: absolute; top: -5px; right: -5px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--warm-amber); color: #0b1535;
+    font-size: 9px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ───── HERO ───── */
+  .hero {
+    position: relative; z-index: 2;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 8rem 2rem 4rem;
+  }
+
+  .hero-content { max-width: 820px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(232,151,74,0.12); border: 0.5px solid rgba(232,151,74,0.3);
+    color: var(--warm-peach); padding: 0.4rem 1rem; border-radius: 20px;
+    font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
+    font-weight: 900; line-height: 1.12;
+    margin-bottom: 1.2rem;
+    animation: fadeDown 0.8s 0.15s ease both;
+  }
+
+  .hero-title .line-gold {
+    background: linear-gradient(135deg, #f5e6c8 0%, #e8974a 40%, #f5e6c8 80%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; font-style: italic;
+    color: var(--text-secondary); line-height: 1.7;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.8s 0.3s ease both;
+  }
+
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeDown 0.8s 0.45s ease both;
+  }
+
+  .btn-primary {
+    padding: 0.9rem 2.2rem; border-radius: 50px;
+    background: linear-gradient(135deg, #e8974a, #d4a843);
+    color: #0b1535; font-weight: 600; font-size: 0.95rem;
+    border: none; cursor: pointer; text-decoration: none;
+    box-shadow: 0 6px 30px rgba(232,151,74,0.4), 0 0 60px rgba(232,151,74,0.15);
+    transition: all 0.3s ease; font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(232,151,74,0.5), 0 0 80px rgba(232,151,74,0.2); }
+
+  .btn-secondary {
+    padding: 0.9rem 2.2rem; border-radius: 50px;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    color: var(--warm-cream); font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; text-decoration: none;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease; font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(232,151,74,0.4); transform: translateY(-2px); }
+
+  /* Floating bakery icons */
+  .float-icons {
+    position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+  }
+
+  .float-icon {
+    position: absolute; font-size: var(--fs, 2rem);
+    opacity: 0.18; animation: floatIcon var(--fd, 6s) ease-in-out infinite var(--fdel, 0s);
+    filter: drop-shadow(0 0 8px rgba(232,151,74,0.4));
+  }
+
+  @keyframes floatIcon {
+    0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+    50% { transform: translateY(-20px) rotate(calc(var(--r, 0deg) + 10deg)); }
+  }
+
+  /* Hero glow ring */
+  .hero-glow {
+    position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 200px;
+    background: radial-gradient(ellipse, rgba(232,151,74,0.12), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    color: var(--text-muted); font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; animation: fadeDown 1s 1s ease both;
+  }
+
+  .scroll-dot {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, rgba(232,151,74,0.6), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* ───── SECTION SHARED ───── */
+  section { position: relative; z-index: 2; }
+
+  .container { max-width: 1300px; margin: 0 auto; padding: 0 2rem; }
+
+  .section-pad { padding: 6rem 0; }
+
+  .section-header { text-align: center; margin-bottom: 3.5rem; }
+
+  .section-eyebrow {
+    display: inline-block; color: var(--warm-amber);
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    font-weight: 500; margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700; line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 1.1rem;
+    color: var(--text-secondary);
+  }
+
+  /* Divider */
+  .divider {
+    width: 60px; height: 2px; margin: 1rem auto 0;
+    background: linear-gradient(to right, transparent, var(--warm-amber), transparent);
+  }
+
+  /* ───── STATS BAR ───── */
+  .stats-bar {
+    background: rgba(15,25,65,0.5);
+    border-top: 0.5px solid var(--glass-border);
+    border-bottom: 0.5px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    padding: 2rem 0;
+  }
+
+  .stats-inner {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1rem; text-align: center;
+  }
+
+  .stat-item { padding: 1rem; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 900; color: var(--warm-gold);
+    display: block;
+  }
+
+  .stat-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
+
+  /* ───── MENU / CATEGORIES ───── */
+  .category-tabs {
+    display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .cat-tab {
+    padding: 0.6rem 1.4rem; border-radius: 50px;
+    background: var(--glass-bg); border: 0.5px solid var(--glass-border);
+    color: var(--text-secondary); font-size: 0.85rem; cursor: pointer;
+    transition: all 0.25s ease; font-family: 'DM Sans', sans-serif;
+  }
+
+  .cat-tab.active, .cat-tab:hover {
+    background: linear-gradient(135deg, rgba(232,151,74,0.2), rgba(212,168,67,0.15));
+    border-color: rgba(232,151,74,0.5); color: var(--warm-peach);
+  }
+
+  /* Product grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: var(--card-bg);
+    border: 0.5px solid var(--glass-border);
+    border-radius: 16px; overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: all 0.35s ease;
+    cursor: pointer;
+  }
+
+  .product-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(232,151,74,0.4);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(232,151,74,0.12);
+  }
+
+  .product-img {
+    width: 100%; height: 180px; object-fit: cover;
+    background: linear-gradient(135deg, #1a2a6c, #0b1535);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; position: relative; overflow: hidden;
+  }
+
+  .product-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(5,10,26,0.5));
+  }
+
+  .product-badge {
+    position: absolute; top: 10px; right: 10px; z-index: 2;
+    background: var(--warm-amber); color: #0b1535;
+    padding: 3px 8px; border-radius: 50px;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+  }
+
+  .product-body { padding: 1rem 1.2rem 1.2rem; }
+
+  .product-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem;
+  }
+
+  .product-desc {
+    font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .product-stars {
+    color: var(--warm-gold); font-size: 0.75rem; margin-bottom: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .product-footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .product-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--warm-gold);
+  }
+
+  .add-cart-btn {
+    padding: 0.45rem 1rem; border-radius: 8px;
+    background: linear-gradient(135deg, rgba(232,151,74,0.2), rgba(212,168,67,0.15));
+    border: 0.5px solid rgba(232,151,74,0.4); color: var(--warm-peach);
+    font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    transition: all 0.25s ease; font-family: 'DM Sans', sans-serif;
+  }
+
+  .add-cart-btn:hover {
+    background: linear-gradient(135deg, #e8974a, #d4a843);
+    color: #0b1535; border-color: transparent;
+    transform: scale(1.04);
+  }
+
+  /* ───── ABOUT ───── */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+
+  .about-main-card {
+    background: var(--card-bg); border: 0.5px solid var(--glass-border);
+    border-radius: 20px; padding: 2.5rem; text-align: center;
+    backdrop-filter: blur(20px);
+  }
+
+  .about-emoji { font-size: 5rem; display: block; margin-bottom: 1rem; }
+
+  .about-float-card {
+    position: absolute;
+    background: rgba(15,25,65,0.85); border: 0.5px solid var(--glass-border);
+    border-radius: 12px; padding: 0.75rem 1rem;
+    backdrop-filter: blur(20px);
+    font-size: 0.82rem;
+  }
+
+  .about-float-card.top-right { top: -20px; right: -20px; }
+  .about-float-card.bottom-left { bottom: -20px; left: -20px; }
+
+  .about-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; margin-bottom: 1.2rem;
+  }
+
+  .about-content p {
+    color: var(--text-secondary); line-height: 1.8;
+    font-size: 0.93rem; margin-bottom: 1rem;
+  }
+
+  .chef-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;
+  }
+
+  .chef-card {
+    background: var(--glass-bg); border: 0.5px solid var(--glass-border);
+    border-radius: 12px; padding: 1rem; text-align: center;
+  }
+
+  .chef-avatar {
+    width: 60px; height: 60px; border-radius: 50%;
+    margin: 0 auto 0.6rem; display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    background: linear-gradient(135deg, rgba(232,151,74,0.2), rgba(212,168,67,0.1));
+    border: 1px solid rgba(232,151,74,0.3);
+  }
+
+  .chef-name { font-size: 0.82rem; font-weight: 500; margin-bottom: 2px; }
+  .chef-role { font-size: 0.72rem; color: var(--text-muted); }
+
+  /* ───── OFFERS ───── */
+  .offers-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  }
+
+  .offer-card {
+    background: var(--card-bg); border: 0.5px solid var(--glass-border);
+    border-radius: 20px; padding: 2rem; text-align: center;
+    backdrop-filter: blur(20px); position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .offer-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(232,151,74,0.08), transparent 70%);
+  }
+
+  .offer-card:hover { transform: translateY(-6px); border-color: rgba(232,151,74,0.4); }
+
+  .offer-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+  .offer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;
+    color: var(--warm-gold);
+  }
+
+  .offer-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.2rem; }
+
+  .offer-tag {
+    display: inline-block; background: rgba(232,151,74,0.15);
+    border: 0.5px solid rgba(232,151,74,0.4); color: var(--warm-peach);
+    padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+  }
+
+  /* ───── REVIEWS ───── */
+  .reviews-slider { position: relative; overflow: hidden; }
+
+  .reviews-track {
+    display: flex; gap: 1.5rem;
+    animation: slideReviews 25s linear infinite;
+  }
+
+  @keyframes slideReviews {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .reviews-track:hover { animation-play-state: paused; }
+
+  .review-card {
+    min-width: 320px; background: var(--card-bg);
+    border: 0.5px solid var(--glass-border); border-radius: 16px;
+    padding: 1.5rem; backdrop-filter: blur(20px);
+    flex-shrink: 0;
+  }
+
+  .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+
+  .reviewer-avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(232,151,74,0.3), rgba(212,168,67,0.2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; border: 1px solid rgba(232,151,74,0.3);
+  }
+
+  .reviewer-name { font-weight: 500; font-size: 0.9rem; }
+  .reviewer-loc { font-size: 0.75rem; color: var(--text-muted); }
+  .review-stars { color: var(--warm-gold); font-size: 0.8rem; margin-bottom: 0.6rem; letter-spacing: 2px; }
+  .review-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; font-style: italic; }
+
+  /* ───── GALLERY ───── */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 1rem;
+  }
+
+  .gallery-item {
+    border-radius: 12px; overflow: hidden;
+    background: var(--card-bg); border: 0.5px solid var(--glass-border);
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; cursor: pointer; position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .gallery-item:hover { transform: scale(1.03); border-color: rgba(232,151,74,0.4); }
+
+  .gallery-item.wide { grid-column: span 2; }
+  .gallery-item.tall { grid-row: span 2; }
+
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(5,10,26,0.8), transparent);
+    opacity: 0; transition: opacity 0.3s ease;
+    display: flex; align-items: flex-end; padding: 1rem;
+  }
+
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+  .gallery-label { font-size: 0.85rem; font-weight: 500; }
+
+  /* ───── CONTACT ───── */
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem;
+  }
+
+  .contact-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; margin-bottom: 1.5rem;
+  }
+
+  .contact-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin-bottom: 1.2rem; padding: 1rem;
+    background: var(--glass-bg); border-radius: 12px;
+    border: 0.5px solid var(--glass-border);
+  }
+
+  .contact-icon { font-size: 1.4rem; }
+  .contact-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
+  .contact-val { font-size: 0.88rem; color: var(--text-primary); }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .form-group label { font-size: 0.78rem; color: var(--text-secondary); letter-spacing: 0.04em; }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    background: var(--glass-bg); border: 0.5px solid var(--glass-border);
+    border-radius: 10px; padding: 0.75rem 1rem;
+    color: var(--text-primary); font-size: 0.88rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s ease; resize: none;
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: rgba(232,151,74,0.5);
+    background: rgba(232,151,74,0.05);
+  }
+
+  .form-group textarea { height: 120px; }
+
+  /* ───── FOOTER ───── */
+  footer {
+    background: rgba(5,10,26,0.9); border-top: 0.5px solid var(--glass-border);
+    padding: 4rem 0 2rem; position: relative; z-index: 2;
+    backdrop-filter: blur(20px);
+  }
+
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 3rem; margin-bottom: 3rem;
+  }
+
+  .footer-brand .logo-text { font-size: 1.4rem; }
+
+  .footer-desc {
+    font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;
+    margin-top: 0.8rem; margin-bottom: 1.5rem;
+  }
+
+  .social-links { display: flex; gap: 0.6rem; }
+
+  .social-btn {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--glass-bg); border: 0.5px solid var(--glass-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; cursor: pointer;
+    transition: all 0.25s ease; text-decoration: none; color: var(--text-secondary);
+  }
+
+  .social-btn:hover { background: rgba(232,151,74,0.15); border-color: rgba(232,151,74,0.4); }
+
+  .footer-col h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem; font-weight: 600;
+    color: var(--warm-cream); margin-bottom: 1rem;
+  }
+
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .footer-links a {
+    text-decoration: none; color: var(--text-secondary);
+    font-size: 0.83rem; transition: color 0.2s ease;
+  }
+
+  .footer-links a:hover { color: var(--warm-peach); }
+
+  .newsletter-form { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
+
+  .newsletter-input {
+    flex: 1; background: var(--glass-bg); border: 0.5px solid var(--glass-border);
+    border-radius: 8px; padding: 0.6rem 0.9rem;
+    color: var(--text-primary); font-size: 0.82rem;
+    font-family: 'DM Sans', sans-serif; outline: none;
+  }
+
+  .newsletter-input:focus { border-color: rgba(232,151,74,0.5); }
+
+  .newsletter-btn {
+    padding: 0.6rem 1rem; border-radius: 8px;
+    background: linear-gradient(135deg, #e8974a, #d4a843);
+    color: #0b1535; border: none; font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s ease;
+  }
+
+  .newsletter-btn:hover { transform: scale(1.03); }
+
+  .footer-bottom {
+    border-top: 0.5px solid var(--glass-border); padding-top: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* ───── MODAL ───── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(5,10,26,0.85); backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: rgba(11,21,53,0.95); border: 0.5px solid var(--glass-border);
+    border-radius: 24px; padding: 2.5rem; width: 400px; max-width: 90%;
+    backdrop-filter: blur(30px); position: relative;
+    transform: scale(0.95); transition: transform 0.3s ease;
+  }
+
+  .modal-overlay.open .modal { transform: scale(1); }
+
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: var(--glass-bg); border: 0.5px solid var(--glass-border);
+    color: var(--text-secondary); width: 32px; height: 32px;
+    border-radius: 8px; cursor: pointer; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close:hover { color: var(--text-primary); background: rgba(255,255,255,0.1); }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;
+    background: linear-gradient(135deg, #f5e6c8, #e8974a);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .modal-sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.8rem; }
+
+  .modal-input-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+
+  .modal-input-group label { font-size: 0.75rem; color: var(--text-secondary); }
+
+  .modal-input-group input {
+    background: rgba(255,255,255,0.05); border: 0.5px solid var(--glass-border);
+    border-radius: 10px; padding: 0.75rem 1rem;
+    color: var(--text-primary); font-size: 0.88rem; outline: none;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s ease;
+  }
+
+  .modal-input-group input:focus {
+    border-color: rgba(232,151,74,0.6);
+    background: rgba(232,151,74,0.05);
+    box-shadow: 0 0 20px rgba(232,151,74,0.1);
+  }
+
+  .modal-options {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.5rem; font-size: 0.78rem;
+  }
+
+  .modal-options label { display: flex; gap: 6px; align-items: center; color: var(--text-secondary); cursor: pointer; }
+  .modal-options a { color: var(--warm-amber); text-decoration: none; }
+
+  .modal-btn {
+    width: 100%; padding: 0.85rem; border-radius: 12px;
+    background: linear-gradient(135deg, #e8974a, #d4a843);
+    color: #0b1535; font-weight: 700; font-size: 0.95rem;
+    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 6px 30px rgba(232,151,74,0.4), 0 0 60px rgba(232,151,74,0.1);
+    transition: all 0.3s ease; margin-bottom: 1.2rem;
+  }
+
+  .modal-btn:hover { box-shadow: 0 8px 40px rgba(232,151,74,0.55); transform: translateY(-1px); }
+
+  .modal-divider {
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+    margin-bottom: 1.2rem; position: relative;
+  }
+
+  .modal-divider::before, .modal-divider::after {
+    content: ''; position: absolute; top: 50%; width: 42%;
+    height: 0.5px; background: var(--glass-border);
+  }
+
+  .modal-divider::before { left: 0; }
+  .modal-divider::after { right: 0; }
+
+  .social-login { display: flex; gap: 0.7rem; justify-content: center; margin-bottom: 1.2rem; }
+
+  .social-login-btn {
+    flex: 1; padding: 0.65rem; border-radius: 10px;
+    background: var(--glass-bg); border: 0.5px solid var(--glass-border);
+    color: var(--text-secondary); font-size: 1.1rem; cursor: pointer;
+    transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+
+  .social-login-btn:hover { background: rgba(255,255,255,0.08); }
+
+  .modal-switch {
+    text-align: center; font-size: 0.8rem; color: var(--text-muted);
+  }
+
+  .modal-switch a { color: var(--warm-amber); text-decoration: none; cursor: pointer; }
+
+  /* ───── ANIMATIONS ───── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0; transform: translateY(30px);
+    transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* Warm bakery light */
+  .bakery-light {
+    position: fixed; pointer-events: none; z-index: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,151,74,0.04), transparent 70%);
+  }
+
+  /* Horizontal glow bands */
+  .glow-band {
+    position: absolute; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(232,151,74,0.15), transparent);
+    pointer-events: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; }
+    .offers-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-item.wide { grid-column: span 1; }
+    .gallery-item.tall { grid-row: span 1; }
+    .chef-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Starfield background -->
+<div id="starfield"></div>
+
+<!-- Moon -->
+<div class="moon"></div>
+
+<!-- Warm bakery light blobs -->
+<div class="bakery-light" style="width:600px;height:600px;bottom:-100px;left:-100px;"></div>
+<div class="bakery-light" style="width:400px;height:400px;top:30%;right:-50px;background:radial-gradient(circle,rgba(212,168,67,0.04),transparent 70%)"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">
+      <span class="logo-icon">🌙</span>
+      <span class="logo-text">Moonlight Bakery & Café</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#offers">Offers</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="#" class="btn-nav btn-ghost" onclick="openModal('login'); return false;">Login</a>
+      <a href="#" class="btn-nav btn-warm" onclick="openModal('signup'); return false;">Sign Up</a>
+      <button class="cart-btn" onclick="cartClick()">🛒<span class="cart-count" id="cartCount">0</span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <div class="float-icons">
+    <span class="float-icon" style="top:18%;left:5%;--fs:2.4rem;--fd:5s;--fdel:0s;--r:-10deg;">🍞</span>
+    <span class="float-icon" style="top:25%;right:8%;--fs:2.2rem;--fd:6s;--fdel:1s;--r:8deg;">☕</span>
+    <span class="float-icon" style="bottom:30%;left:8%;--fs:2rem;--fd:7s;--fdel:0.5s;--r:5deg;">🥐</span>
+    <span class="float-icon" style="bottom:25%;right:6%;--fs:2.4rem;--fd:5.5s;--fdel:1.5s;--r:-5deg;">🍰</span>
+    <span class="float-icon" style="top:40%;left:2%;--fs:1.8rem;--fd:8s;--fdel:2s;--r:12deg;">🌙</span>
+    <span class="float-icon" style="top:15%;right:25%;--fs:1.4rem;--fd:4s;--fdel:0.8s;--r:0deg;">✨</span>
+    <span class="float-icon" style="bottom:35%;right:2%;--fs:1.6rem;--fd:6.5s;--fdel:2.5s;--r:-8deg;">🍩</span>
+    <span class="float-icon" style="top:60%;left:20%;--fs:1.5rem;--fd:7.5s;--fdel:1.2s;--r:15deg;">🧁</span>
+    <span class="float-icon" style="top:35%;right:18%;--fs:1.4rem;--fd:5s;--fdel:3s;--r:-12deg;">🌟</span>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">✨ Open Every Night Till Midnight ✨</div>
+    <h1 class="hero-title">
+      <span class="line-gold">Freshly Baked</span><br>
+      Happiness Every Day<br>
+      <span style="font-size:0.7em;">✨🍞☕</span>
+    </h1>
+    <p class="hero-subtitle">
+      Taste handcrafted breads, matcha specials, coffee, milk products,<br>
+      desserts, and much more under the moonlit sky.
+    </p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-primary">Order Now 🌙</a>
+      <a href="#menu" class="btn-secondary">Explore Menu →</a>
+    </div>
+  </div>
+
+  <div class="hero-glow"></div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-dot"></div>
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-inner">
+      <div class="stat-item fade-up">
+        <span class="stat-num">12K+</span>
+        <p class="stat-label">Happy Customers</p>
+      </div>
+      <div class="stat-item fade-up">
+        <span class="stat-num">85+</span>
+        <p class="stat-label">Bakery Items</p>
+      </div>
+      <div class="stat-item fade-up">
+        <span class="stat-num">15</span>
+        <p class="stat-label">Years of Craft</p>
+      </div>
+      <div class="stat-item fade-up">
+        <span class="stat-num">4.9★</span>
+        <p class="stat-label">Average Rating</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu" class="section-pad">
+  <div class="container">
+    <div class="section-header fade-up">
+      <span class="section-eyebrow">✨ Our Menu</span>
+      <h2 class="section-title">Crafted With Love Every Night</h2>
+      <p class="section-sub">From dawn bakes to midnight treats — always fresh, always magical</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="category-tabs fade-up">
+      <button class="cat-tab active" onclick="filterCat('all', this)">🌟 All Items</button>
+      <button class="cat-tab" onclick="filterCat('bread', this)">🍞 Breads</button>
+      <button class="cat-tab" onclick="filterCat('coffee', this)">☕ Coffee & Drinks</button>
+      <button class="cat-tab" onclick="filterCat('milk', this)">🥛 Milk Products</button>
+      <button class="cat-tab" onclick="filterCat('dessert', this)">🍰 Desserts</button>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- ABOUT US -->
+<section id="about" class="section-pad" style="background: rgba(11,21,53,0.3);">
+  <div class="container">
+    <div class="section-header fade-up">
+      <span class="section-eyebrow">🌙 Our Story</span>
+      <h2 class="section-title">About Moonlight Bakery</h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-visual fade-up">
+        <div class="about-main-card">
+          <span class="about-emoji">🌙🍞</span>
+          <h3 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:0.5rem;">Baked Under the Stars</h3>
+          <p style="color:var(--text-secondary); font-size:0.88rem; line-height:1.7;">Every loaf tells a story of moonlit kitchens and early-morning magic</p>
+        </div>
+        <div class="about-float-card top-right">
+          <div style="font-size:1.4rem; margin-bottom:4px;">⭐ 4.9/5</div>
+          <div style="font-size:0.72rem; color:var(--text-muted);">2,400+ Reviews</div>
+        </div>
+        <div class="about-float-card bottom-left">
+          <div style="font-size:1.2rem; margin-bottom:4px;">🏆 Award 2024</div>
+          <div style="font-size:0.72rem; color:var(--text-muted);">Best Café of the Year</div>
+        </div>
+      </div>
+
+      <div class="about-content fade-up">
+        <h2>Crafting Dreams Since 2009</h2>
+        <p>Nestled under the open night sky, Moonlight Bakery & Café was born from a simple dream — to bake bread that warms hearts and fills homes with the most comforting aromas imaginable.</p>
+        <p>For over 15 years, our master bakers have been waking before sunrise, hand-crafting every loaf, pastry, and cake using locally sourced ingredients and generations-old recipes passed down with love.</p>
+        <p>From our signature matcha bread to our moonlit espresso, every item on our menu is a labor of love and a celebration of the night sky that inspires us.</p>
+
+        <div class="chef-grid">
+          <div class="chef-card fade-up">
+            <div class="chef-avatar">👨‍🍳</div>
+            <p class="chef-name">Chef Aryan</p>
+            <p class="chef-role">Head Baker</p>
+          </div>
+          <div class="chef-card fade-up">
+            <div class="chef-avatar">👩‍🍳</div>
+            <p class="chef-name">Chef Priya</p>
+            <p class="chef-role">Pastry Chef</p>
+          </div>
+          <div class="chef-card fade-up">
+            <div class="chef-avatar">🧑‍🍳</div>
+            <p class="chef-name">Chef Rohan</p>
+            <p class="chef-role">Café Barista</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIAL OFFERS -->
+<section id="offers" class="section-pad">
+  <div class="container">
+    <div class="section-header fade-up">
+      <span class="section-eyebrow">🎁 Special Deals</span>
+      <h2 class="section-title">Tonight's Moonlit Offers</h2>
+      <p class="section-sub">Limited-time magic — grab before the moon sets!</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="offers-grid">
+      <div class="offer-card fade-up">
+        <span class="offer-icon">🍞🍞</span>
+        <h3 class="offer-title">Buy 1 Get 1 Free</h3>
+        <p class="offer-desc">All artisan breads. Every Tuesday & Thursday — share the warmth with someone you love.</p>
+        <span class="offer-tag">TUE & THU ONLY</span>
+      </div>
+      <div class="offer-card fade-up">
+        <span class="offer-icon">🌙✨</span>
+        <h3 class="offer-title">Midnight Magic Deal</h3>
+        <p class="offer-desc">Order after 9 PM and enjoy 20% off your entire order. Night owls deserve treats too!</p>
+        <span class="offer-tag">AFTER 9 PM</span>
+      </div>
+      <div class="offer-card fade-up">
+        <span class="offer-icon">🎂🎉</span>
+        <h3 class="offer-title">Festival Specials</h3>
+        <p class="offer-desc">Celebrate festivals with 30% off custom cakes and cupcake boxes. Order 2 days ahead!</p>
+        <span class="offer-tag">LIMITED TIME</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" class="section-pad" style="background: rgba(11,21,53,0.3);">
+  <div class="container">
+    <div class="section-header fade-up">
+      <span class="section-eyebrow">💬 Love Notes</span>
+      <h2 class="section-title">What Our Guests Say</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="reviews-slider fade-up">
+      <div class="reviews-track" id="reviewsTrack"></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="section-pad">
+  <div class="container">
+    <div class="section-header fade-up">
+      <span class="section-eyebrow">📸 Gallery</span>
+      <h2 class="section-title">A Glimpse Into Our World</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="gallery-grid fade-up">
+      <div class="gallery-item wide" style="font-size:5rem; background: linear-gradient(135deg,#0f1e4a,#1a2a6c);">
+        🍰
+        <div class="gallery-overlay"><span class="gallery-label">Custom Cakes</span></div>
+      </div>
+      <div class="gallery-item" style="background:linear-gradient(135deg,#0b1535,#0f1e4a);">🍞<div class="gallery-overlay"><span class="gallery-label">Artisan Breads</span></div></div>
+      <div class="gallery-item tall" style="background:linear-gradient(135deg,#0f1e4a,#1a2a6c);">☕<div class="gallery-overlay"><span class="gallery-label">Handcrafted Coffee</span></div></div>
+      <div class="gallery-item" style="background:linear-gradient(135deg,#0b1535,#0f1e4a);">🥐<div class="gallery-overlay"><span class="gallery-label">Fresh Pastries</span></div></div>
+      <div class="gallery-item" style="background:linear-gradient(135deg,#0f1e4a,#0b1535);">🍵<div class="gallery-overlay"><span class="gallery-label">Matcha Specials</span></div></div>
+      <div class="gallery-item wide" style="font-size:5rem; background:linear-gradient(135deg,#0b1535,#1a2a6c);">🍩<div class="gallery-overlay"><span class="gallery-label">Donuts & Sweets</span></div></div>
+      <div class="gallery-item" style="background:linear-gradient(135deg,#0f1e4a,#0b1535);">🧁<div class="gallery-overlay"><span class="gallery-label">Cupcakes</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section-pad" style="background: rgba(11,21,53,0.3);">
+  <div class="container">
+    <div class="section-header fade-up">
+      <span class="section-eyebrow">📍 Find Us</span>
+      <h2 class="section-title">Come Visit the Bakery</h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="contact-grid">
+      <div class="fade-up">
+        <h3 class="contact-info" style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:1.5rem;">Get In Touch</h3>
+
+        <div class="contact-item">
+          <span class="contact-icon">📍</span>
+          <div>
+            <p class="contact-label">Address</p>
+            <p class="contact-val">12 Moonlit Lane, Baker Street<br>Nagpur, Maharashtra 440001</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">📞</span>
+          <div>
+            <p class="contact-label">Phone</p>
+            <p class="contact-val">+91 98765 43210</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">✉️</span>
+          <div>
+            <p class="contact-label">Email</p>
+            <p class="contact-val">hello@moonlightbakery.in</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">🕐</span>
+          <div>
+            <p class="contact-label">Opening Hours</p>
+            <p class="contact-val">Mon – Sat: 6:00 AM – 12:00 AM<br>Sunday: 7:00 AM – 11:00 PM</p>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem; background:var(--card-bg); border:0.5px solid var(--glass-border); border-radius:16px; padding:1.5rem; text-align:center;">
+          <p style="font-size:2rem; margin-bottom:0.5rem;">🗺️</p>
+          <p style="font-size:0.82rem; color:var(--text-muted);">12 Moonlit Lane, Baker Street, Nagpur</p>
+          <p style="font-size:0.75rem; color:var(--warm-amber); margin-top:0.5rem;">📍 Find us on Google Maps</p>
+        </div>
+      </div>
+
+      <div class="fade-up">
+        <div style="background:var(--card-bg); border:0.5px solid var(--glass-border); border-radius:20px; padding:2rem; backdrop-filter:blur(20px);">
+          <h3 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:1.5rem;">Send Us a Message ✨</h3>
+          <div class="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" placeholder="Your name">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="your@email.com">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" placeholder="+91 00000 00000">
+            </div>
+            <div class="form-group">
+              <label>Subject</label>
+              <input type="text" placeholder="What's on your mind?">
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea placeholder="Tell us about your order or inquiry..."></textarea>
+            </div>
+            <button class="btn-primary" style="border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:0.95rem;">Send Message 🌙</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.8rem;">
+          <span style="font-size:1.8rem;">🌙</span>
+          <span class="logo-text">Moonlight Bakery & Café</span>
+        </div>
+        <p class="footer-desc">Where every bite is a little piece of moonlit magic. Crafting happiness one loaf at a time since 2009.</p>
+        <div class="social-links">
+          <a class="social-btn" href="#" title="Instagram">📷</a>
+          <a class="social-btn" href="#" title="Facebook">📘</a>
+          <a class="social-btn" href="#" title="Twitter">🐦</a>
+          <a class="social-btn" href="#" title="YouTube">▶️</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#menu">Our Menu</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#offers">Offers</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Our Products</h4>
+        <ul class="footer-links">
+          <li><a href="#">Artisan Breads</a></li>
+          <li><a href="#">Coffee & Drinks</a></li>
+          <li><a href="#">Cakes & Pastries</a></li>
+          <li><a href="#">Milk Products</a></li>
+          <li><a href="#">Matcha Specials</a></li>
+          <li><a href="#">Seasonal Items</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Newsletter</h4>
+        <p style="font-size:0.82rem; color:var(--text-secondary); line-height:1.6; margin-bottom:0.8rem;">Get weekly recipes, offers & moonlit stories delivered to your inbox.</p>
+        <div class="newsletter-form">
+          <input type="email" class="newsletter-input" placeholder="Your email">
+          <button class="newsletter-btn">→</button>
+        </div>
+        <p style="font-size:0.72rem; color:var(--text-muted); margin-top:0.8rem;">✓ No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 Moonlight Bakery & Café. Made with 🌙 & ❤️ in Nagpur.</p>
+      <p class="footer-copy">Privacy Policy · Terms · Cookies</p>
+    </div>
+  </div>
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login')">✕</button>
+    <div style="text-align:center; margin-bottom:1.2rem; font-size:2rem;">🌙</div>
+    <h2 class="modal-title">Welcome Back</h2>
+    <p class="modal-sub">Sign in to your Moonlight account</p>
+    <div class="modal-input-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="your@email.com">
+    </div>
+    <div class="modal-input-group">
+      <label>Password</label>
+      <input type="password" placeholder="••••••••">
+    </div>
+    <div class="modal-options">
+      <label><input type="checkbox"> Remember me</label>
+      <a href="#">Forgot password?</a>
+    </div>
+    <button class="modal-btn">Sign In ✨</button>
+    <div class="modal-divider">or continue with</div>
+    <div class="social-login">
+      <button class="social-login-btn">🌐 <span style="font-size:0.78rem;">Google</span></button>
+      <button class="social-login-btn">📘 <span style="font-size:0.78rem;">Facebook</span></button>
+      <button class="social-login-btn">🍎 <span style="font-size:0.78rem;">Apple</span></button>
+    </div>
+    <p class="modal-switch">Don't have an account? <a onclick="switchModal('login','signup')">Sign Up</a></p>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div class="modal-overlay" id="signupModal">
+  <div class="modal" style="width:440px;">
+    <button class="modal-close" onclick="closeModal('signup')">✕</button>
+    <div style="text-align:center; margin-bottom:1rem; font-size:2rem;">✨</div>
+    <h2 class="modal-title">Join the Family</h2>
+    <p class="modal-sub">Create your Moonlight account</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
+      <div class="modal-input-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="Your full name">
+      </div>
+      <div class="modal-input-group">
+        <label>Username</label>
+        <input type="text" placeholder="@username">
+      </div>
+    </div>
+    <div class="modal-input-group" style="margin-top:0.8rem;">
+      <label>Email Address</label>
+      <input type="email" placeholder="your@email.com">
+    </div>
+    <div class="modal-input-group">
+      <label>Phone Number</label>
+      <input type="tel" placeholder="+91 00000 00000">
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
+      <div class="modal-input-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••">
+      </div>
+      <div class="modal-input-group">
+        <label>Confirm Password</label>
+        <input type="password" placeholder="••••••••">
+      </div>
+    </div>
+    <button class="modal-btn" style="margin-top:1.2rem;">Create Account 🌙</button>
+    <div class="modal-divider">or sign up with</div>
+    <div class="social-login">
+      <button class="social-login-btn">🌐 <span style="font-size:0.78rem;">Google</span></button>
+      <button class="social-login-btn">📘 <span style="font-size:0.78rem;">Facebook</span></button>
+      <button class="social-login-btn">🍎 <span style="font-size:0.78rem;">Apple</span></button>
+    </div>
+    <p class="modal-switch">Already have an account? <a onclick="switchModal('signup','login')">Sign In</a></p>
+  </div>
+</div>
+
+<script>
+// ─── STARS ───
+const sf = document.getElementById('starfield');
+for (let i = 0; i < 200; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%;
+    top:${Math.random()*100}%;
+    --d:${2+Math.random()*4}s;
+    --del:${Math.random()*5}s;
+    --min:${0.1+Math.random()*0.4};
+    opacity:${0.2+Math.random()*0.5};
+  `;
+  sf.appendChild(s);
+}
+
+// ─── PARTICLES ───
+for (let i = 0; i < 20; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 6 + 3;
+  p.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%;
+    top:${20+Math.random()*70}%;
+    --dur:${8+Math.random()*14}s;
+    --del2:${Math.random()*8}s;
+    --tx:${(Math.random()-0.5)*80}px;
+    --ty:${-60-Math.random()*120}px;
+    opacity:0;
+  `;
+  document.body.appendChild(p);
+}
+
+// ─── PRODUCTS DATA ───
+const products = [
+  { cat:'bread', name:'White Bread', emoji:'🍞', desc:'Classic soft white loaf, baked fresh every morning', price:'₹65', rating:5, badge:'Bestseller' },
+  { cat:'bread', name:'Matcha Bread', emoji:'🍵', desc:'Premium Japanese matcha swirled into our fluffy bread', price:'₹120', rating:5, badge:'Special' },
+  { cat:'bread', name:'Garlic Bread', emoji:'🧄', desc:'Crispy garlic butter baguette — perfectly golden', price:'₹80', rating:5 },
+  { cat:'bread', name:'Brown Bread', emoji:'🫓', desc:'Whole wheat goodness, nutty and wholesome', price:'₹70', rating:4 },
+  { cat:'bread', name:'Chocolate Bread', emoji:'🍫', desc:'Rich dark chocolate swirls inside pillowy bread', price:'₹110', rating:5, badge:'Popular' },
+  { cat:'bread', name:'Multigrain Bread', emoji:'🌾', desc:'Seeds and grains for a hearty nutritious loaf', price:'₹90', rating:4 },
+  { cat:'coffee', name:'Cappuccino', emoji:'☕', desc:'Velvety steamed milk with rich espresso art', price:'₹130', rating:5, badge:'Fave' },
+  { cat:'coffee', name:'Matcha Latte', emoji:'🍵', desc:'Ceremonial grade matcha with oat milk', price:'₹160', rating:5, badge:'Trending' },
+  { cat:'coffee', name:'Cold Coffee', emoji:'🧋', desc:'Chilled coffee shake, sweet and creamy', price:'₹140', rating:4 },
+  { cat:'coffee', name:'Hot Chocolate', emoji:'🍫', desc:'Belgian chocolate melted into velvety warm milk', price:'₹120', rating:5 },
+  { cat:'coffee', name:'Fruit Smoothie', emoji:'🍓', desc:'Blended seasonal fruits, fresh and vibrant', price:'₹150', rating:4 },
+  { cat:'coffee', name:'Espresso', emoji:'☕', desc:'Pure double-shot espresso, bold and aromatic', price:'₹90', rating:5 },
+  { cat:'milk', name:'Fresh Milk', emoji:'🥛', desc:'Farm fresh whole milk delivered daily', price:'₹45', rating:4 },
+  { cat:'milk', name:'Artisan Cheese', emoji:'🧀', desc:'Handcrafted cheese aged to perfection', price:'₹180', rating:5, badge:'Premium' },
+  { cat:'milk', name:'Cream Butter', emoji:'🧈', desc:'Churned in-house, rich golden butter', price:'₹95', rating:5 },
+  { cat:'milk', name:'Greek Yogurt', emoji:'🫙', desc:'Thick and creamy, honey-drizzled perfection', price:'₹85', rating:4 },
+  { cat:'dessert', name:'Signature Cake', emoji:'🎂', desc:'Layered celebration cake with buttercream', price:'₹380', rating:5, badge:'Custom' },
+  { cat:'dessert', name:'Croissant', emoji:'🥐', desc:'Buttery flaky layers, baked till golden', price:'₹95', rating:5, badge:'Fresh' },
+  { cat:'dessert', name:'Chocolate Donut', emoji:'🍩', desc:'Glazed chocolate ring with rainbow sprinkles', price:'₹75', rating:4 },
+  { cat:'dessert', name:'Cupcake', emoji:'🧁', desc:'Fluffy vanilla cake with swirled frosting', price:'₹85', rating:5 },
+  { cat:'dessert', name:'Almond Cookie', emoji:'🍪', desc:'Crispy edges, chewy centers with roasted almonds', price:'₹55', rating:4 },
+  { cat:'dessert', name:'Blueberry Muffin', emoji:'🫐', desc:'Bursting with juicy blueberries, moist crumb', price:'₹90', rating:5 },
+];
+
+let cartItems = 0;
+let currentCat = 'all';
+
+function renderProducts(cat) {
+  const grid = document.getElementById('productGrid');
+  const filtered = cat === 'all' ? products : products.filter(p => p.cat === cat);
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card">
+      <div class="product-img">
+        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+        <span style="position:relative;z-index:1;">${p.emoji}</span>
+      </div>
+      <div class="product-body">
+        <h3 class="product-name">${p.name}</h3>
+        <p class="product-desc">${p.desc}</p>
+        <div class="product-stars">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)}</div>
+        <div class="product-footer">
+          <span class="product-price">${p.price}</span>
+          <button class="add-cart-btn" onclick="addToCart(this)">+ Add</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(cat);
+}
+
+function addToCart(btn) {
+  cartItems++;
+  document.getElementById('cartCount').textContent = cartItems;
+  btn.textContent = '✓ Added';
+  btn.style.background = 'linear-gradient(135deg,#e8974a,#d4a843)';
+  btn.style.color = '#0b1535';
+  setTimeout(() => {
+    btn.textContent = '+ Add';
+    btn.style.background = '';
+    btn.style.color = '';
+  }, 1500);
+}
+
+function cartClick() {
+  alert('🛒 Cart: ' + cartItems + ' items\n\nFull cart page coming soon!');
+}
+
+renderProducts('all');
+
+// ─── REVIEWS ───
+const reviews = [
+  { name:'Aarav Sharma', loc:'Nagpur', emoji:'🧑', text:'"The matcha bread is absolutely divine — I drive across the city just for it. The starry atmosphere inside is unlike any café!"', stars:5 },
+  { name:'Priya Mehta', loc:'Mumbai', emoji:'👩', text:'"Best cappuccino I\'ve ever had. The warm lighting and cozy vibe makes it feel magical, like the whole bakery is glowing."', stars:5 },
+  { name:'Rohan Patel', loc:'Pune', emoji:'👨', text:'"Visited on a whim and stayed for 3 hours. Their chocolate bread with butter is the most comforting thing in the world."', stars:5 },
+  { name:'Sneha Gupta', loc:'Delhi', emoji:'🧕', text:'"The custom birthday cake was a showstopper. Everyone at the party was asking where I got it. Absolutely stunning!"', stars:5 },
+  { name:'Vikram Nair', loc:'Bangalore', emoji:'🧔', text:'"Late night matcha latte under the open terrace — pure bliss. The moonlit setting is exactly as magical as it sounds."', stars:5 },
+  { name:'Ananya Joshi', loc:'Hyderabad', emoji:'👱‍♀️', text:'"The blueberry muffins taste homemade — incredibly moist and bursting with flavor. I order a box every week now!"', stars:5 },
+];
+
+const trackEl = document.getElementById('reviewsTrack');
+const allReviews = [...reviews, ...reviews]; // duplicate for seamless loop
+trackEl.innerHTML = allReviews.map(r => `
+  <div class="review-card">
+    <div class="review-header">
+      <div class="reviewer-avatar">${r.emoji}</div>
+      <div>
+        <p class="reviewer-name">${r.name}</p>
+        <p class="reviewer-loc">📍 ${r.loc}</p>
+      </div>
+    </div>
+    <div class="review-stars">${'★'.repeat(r.stars)}</div>
+    <p class="review-text">${r.text}</p>
+  </div>
+`).join('');
+
+// ─── SCROLL ANIMATIONS ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ─── NAV SCROLL ───
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 60) {
+    nav.style.background = 'rgba(5,10,26,0.92)';
+  } else {
+    nav.style.background = 'rgba(5,10,26,0.75)';
+  }
+});
+
+// ─── MODALS ───
+function openModal(type) {
+  document.getElementById(type === 'login' ? 'loginModal' : 'signupModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(type) {
+  document.getElementById(type === 'login' ? 'loginModal' : 'signupModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function switchModal(from, to) {
+  closeModal(from);
+  setTimeout(() => openModal(to), 200);
+}
+
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+});
+</script>
+</body>
+</html>
